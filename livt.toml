@@ -1,0 +1,18 @@
+[project]
+name = "Livt"
+version = "0.1.0"
+
+[dependencies]
+Livt.Base = "0.1.1"
+Livt.Math = "0.3.0"
+Livt.Net = "0.24.1"
+Livt.Crypto = "1.0.1"
+Livt.ML = "0.1.0"
+Livt.IO = "0.1.0"
+Livt.Utils = "0.1.0"
+
+[build.debug]
+warnings = ["all", "no-variable-divisor"]
+
+[build.release]
+warnings = ["all"]

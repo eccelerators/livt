@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">Livt Base Library architecture overview</title>
+  <desc id="desc">Overview of the Livt standard library package areas and the Livt toolchain.</desc>
+  <defs>
+    <style>
+      .bg { fill: #263f8f; }
+      .title { fill: #ffffff; font: 500 54px Arial, Helvetica, sans-serif; }
+      .subtitle { fill: #dbe5ff; font: 400 21px Arial, Helvetica, sans-serif; }
+      .section { fill: #ffffff; font: 700 21px Arial, Helvetica, sans-serif; }
+      .label { fill: #1d3587; font: 700 23px Arial, Helvetica, sans-serif; }
+      .small { fill: #1d3587; font: 400 17px Arial, Helvetica, sans-serif; }
+      .tiny { fill: #5367a7; font: 400 14px Arial, Helvetica, sans-serif; }
+      .plannedLabel { fill: #3a4b78; font: 700 21px Arial, Helvetica, sans-serif; }
+      .plannedSmall { fill: #3a4b78; font: 400 16px Arial, Helvetica, sans-serif; }
+      .card { fill: #ffffff; stroke: #dfe7ff; stroke-width: 1; }
+      .planned { fill: #eef3ff; stroke: #bccaf7; stroke-width: 1.5; stroke-dasharray: 8 6; }
+      .tool { fill: #ffffff; stroke: #dfe7ff; stroke-width: 1; }
+      .dash { stroke: #ffffff; stroke-width: 2; stroke-dasharray: 8 8; opacity: 0.9; }
+      .badge { fill: #dbe5ff; }
+      .badgeText { fill: #1d3587; font: 700 13px Arial, Helvetica, sans-serif; }
+      .link { fill: #ffffff; font: 400 20px Arial, Helvetica, sans-serif; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1280" height="760"/>
+
+  <text class="title" x="58" y="76">The Livt Base Library</text>
+  <text class="subtitle" x="62" y="112">Standard library packages for FPGA Application Development.</text>
+
+  <rect class="card" x="58" y="185" width="270" height="126" rx="12"/>
+  <text class="label" x="193" y="226" text-anchor="middle">Livt.Base</text>
+  <text class="small" x="193" y="256" text-anchor="middle">Bits, ASCII, Convert</text>
+  <text class="small" x="193" y="280" text-anchor="middle">Format, Array, String</text>
+
+  <rect class="card" x="354" y="185" width="270" height="126" rx="12"/>
+  <text class="label" x="489" y="226" text-anchor="middle">Livt.Math</text>
+  <text class="small" x="489" y="256" text-anchor="middle">Sqrt, fixed point, MAC</text>
+  <text class="small" x="489" y="280" text-anchor="middle">Complex, lookup, random</text>
+
+  <rect class="card" x="650" y="185" width="270" height="126" rx="12"/>
+  <text class="label" x="785" y="226" text-anchor="middle">Livt.IO</text>
+  <text class="small" x="785" y="256" text-anchor="middle">RAM, UART receiver</text>
+  <text class="small" x="785" y="280" text-anchor="middle">UART transmitter, FIFOs</text>
+
+  <rect class="card" x="946" y="185" width="270" height="126" rx="12"/>
+  <text class="label" x="1081" y="226" text-anchor="middle">Livt.Utils</text>
+  <text class="small" x="1081" y="256" text-anchor="middle">CRC32 and general</text>
+  <text class="small" x="1081" y="280" text-anchor="middle">utility components</text>
+
+  <rect class="card" x="58" y="333" width="270" height="126" rx="12"/>
+  <text class="label" x="193" y="374" text-anchor="middle">Livt.Crypto</text>
+  <text class="small" x="193" y="404" text-anchor="middle">AES, GCM, ChaCha20</text>
+  <text class="small" x="193" y="428" text-anchor="middle">SHA, HMAC, HKDF, DRBG</text>
+
+  <rect class="card" x="354" y="333" width="270" height="126" rx="12"/>
+  <text class="label" x="489" y="374" text-anchor="middle">Livt.Net</text>
+  <text class="small" x="489" y="404" text-anchor="middle">Ethernet, ARP, IPv4</text>
+  <text class="small" x="489" y="428" text-anchor="middle">ICMP, TCP, HTTP</text>
+
+  <rect class="card" x="650" y="333" width="270" height="126" rx="12"/>
+  <text class="label" x="785" y="374" text-anchor="middle">Livt.ML</text>
+  <text class="small" x="785" y="404" text-anchor="middle">Linear, activation</text>
+  <text class="small" x="785" y="428" text-anchor="middle">Attention, transformer</text>
+
+  <rect class="planned" x="946" y="333" width="270" height="126" rx="12"/>
+  <text class="plannedLabel" x="1081" y="374" text-anchor="middle">Future packages</text>
+  <text class="plannedSmall" x="1081" y="404" text-anchor="middle">Collections, Signal</text>
+  <text class="plannedSmall" x="1081" y="428" text-anchor="middle">Web, more protocols</text>
+
+  <line class="dash" x1="42" y1="511" x2="1238" y2="511"/>
+
+  <rect class="tool" x="58" y="542" width="1158" height="88" rx="12"/>
+  <text class="label" x="170" y="595" text-anchor="middle">Livt Toolchain</text>
+  <text class="small" x="650" y="581" text-anchor="middle">Language, compiler, package manager, build system, test runner</text>
+  <text class="tiny" x="650" y="607" text-anchor="middle">Used to build, package, and verify Livt libraries and applications.</text>
+
+</svg>
