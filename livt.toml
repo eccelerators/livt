@@ -7,7 +7,7 @@ Livt.Base = "0.1.1"
 Livt.Math = "0.3.1"
 Livt.Net = "0.25.0"
 Livt.Crypto = "1.0.2"
-Livt.ML = "0.1.0"
+Livt.ML = "0.2.0"
 Livt.IO = "0.1.0"
 Livt.Utils = "0.1.0"
 
