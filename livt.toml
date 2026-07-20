@@ -3,7 +3,7 @@ name = "Livt"
 version = "0.3.0"
 
 [dependencies]
-Livt.Base = "0.1.1"
+Livt.Base = "0.2.0"
 Livt.Math = "0.3.1"
 Livt.Net = "0.25.0"
 Livt.Crypto = "1.0.3"
