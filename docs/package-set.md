@@ -1,4 +1,4 @@
-# Livt 0.1.0 Package Set
+# Livt 0.3.0 Package Set
 
 `Livt` is a manifest package. Its purpose is to publish one coordinated standard
 library dependency set.
@@ -7,12 +7,13 @@ library dependency set.
 
 | Package | Version |
 |---|---:|
-| `Livt.Base` | `0.1.1` |
-| `Livt.Math` | `0.3.0` |
-| `Livt.Net` | `0.24.1` |
-| `Livt.Crypto` | `1.0.1` |
-| `Livt.ML` | `0.1.0` |
-| `Livt.IO` | `0.1.0` |
+| `Livt.Base` | `0.2.0` |
+| `Livt.Math` | `0.3.1` |
+| `Livt.Net` | `0.25.0` |
+| `Livt.Crypto` | `1.0.3` |
+| `Livt.ML` | `0.2.0` |
+| `Livt.IO` | `0.2.0` |
+| `Livt.Bus` | `0.3.0` |
 | `Livt.Utils` | `0.1.0` |
 
 ## Release Checklist
@@ -20,12 +21,11 @@ library dependency set.
 Before publishing a new `Livt` meta-package release:
 
 - confirm every pinned package version exists and is publish-ready
-- run each package's configured `livt test`
-- expect this repository itself to have no local test VHDL because it is manifest-only
+- run `make test` to execute every package suite and the combined compatibility test
 - update `livt.toml`
 - update this file
 - update the README package table
-- keep this repository source-free unless the package policy changes
+- keep this repository free of production source components
 
 ## Compatibility Boundary
 

@@ -8,9 +8,15 @@ Livt.Math = "0.3.1"
 Livt.Net = "0.25.0"
 Livt.Crypto = "1.0.3"
 Livt.ML = "0.2.0"
-Livt.IO = "0.1.0"
-Livt.Bus = "0.2.0"
+Livt.IO = "0.2.0"
+Livt.Bus = "0.3.0"
 Livt.Utils = "0.1.0"
+
+[tests]
+path = "tests"
+components = [
+    "StandardLibraryCompatibilityTest"
+]
 
 [build.debug]
 warnings = ["all"]

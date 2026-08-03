@@ -1,0 +1,16 @@
+namespace Livt.StandardLibrary.Tests
+
+@Test component StandardLibraryCompatibilityTest
+{
+	compatibility: PackageSetCompatibility
+
+	new()
+	{
+		this.compatibility = new PackageSetCompatibility()
+	}
+
+	@Test fn ResolvesAndRunsPinnedPackageSet()
+	{
+		assert this.compatibility.Check()
+	}
+}

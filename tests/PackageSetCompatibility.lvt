@@ -1,0 +1,46 @@
+namespace Livt.StandardLibrary.Tests
+
+using Livt.Bits
+using Livt.Bus.Axi4Lite
+using Livt.Crypto.Hash
+using Livt.IO
+using Livt.Math.FixedPoint
+using Livt.ML.Activation
+using Livt.Net
+using Livt.Utils.Hashing
+
+/**
+ * Compiles representative public APIs from every pinned standard-library
+ * package in the same semantic and generation context.
+ */
+component PackageSetCompatibility
+{
+	bits: Bits
+
+	checksum: InternetChecksum
+
+	relu: ReLU
+
+	new()
+	{
+		this.bits = new Bits()
+		this.checksum = new InternetChecksum()
+		this.relu = new ReLU()
+	}
+
+	public fn Check() bool
+	{
+		var valid = this.bits.GetBit(2, 1) == 1
+		valid = valid && Q7.ClampValue(200) == Q7.MAX
+		valid = valid && Sha256.BLOCK_SIZE == 64
+		valid = valid && this.relu.Apply(-3) == 0
+		valid = valid && Ram.CAPACITY == 2048
+		valid = valid && Axi4LiteMaster.ALL_BYTES == 0b1111
+		valid = valid && Crc32.BLOCK_SIZE == 16
+
+		this.checksum.Reset()
+		this.checksum.AddByte(0x45)
+		this.checksum.AddByte(0x00)
+		return valid && this.checksum.GetChecksum() == 47871
+	}
+}

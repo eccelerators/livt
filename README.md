@@ -4,9 +4,10 @@
 applications and larger packages one dependency that brings in the official Livt
 library packages as a tested, compatible set.
 
-The 0.1.0 package is a manifest bundle only. It does not publish source
+The 0.3.0 package is a manifest bundle. It does not publish production source
 components of its own; it pins versions of the focused library packages that
-make up the current Livt standard library.
+make up the current Livt standard library and provides an integration test for
+the complete package set.
 
 ![Livt standard library architecture](docs/architecture.svg)
 
@@ -14,7 +15,7 @@ make up the current Livt standard library.
 
 ```toml
 [dependencies]
-Livt = "0.1.0"
+Livt = "0.3.0"
 ```
 
 Use `Livt` when an application wants the full standard library surface. Smaller
@@ -23,16 +24,17 @@ such as `Livt.Math`, `Livt.IO`, or `Livt.Crypto`.
 
 ## 📚 Package Set
 
-`Livt 0.1.0` pins this compatible package set:
+`Livt 0.3.0` pins this compatible package set:
 
 | Package | Version | Role |
 |---|---:|---|
-| `Livt.Base` | `0.1.1` | Foundational helpers and common library components |
-| `Livt.Math` | `0.3.0` | Numeric, fixed-point, arithmetic, lookup, and random helpers |
-| `Livt.Net` | `0.24.1` | Ethernet, ARP, IPv4, ICMP, TCP, HTTP, and EthernetLite helpers |
-| `Livt.Crypto` | `1.0.1` | Cryptographic primitives, hashes, MACs, KDFs, AEADs, and DRBGs |
-| `Livt.ML` | `0.1.0` | Fixed-size ML building blocks and approximation/reference components |
-| `Livt.IO` | `0.1.0` | RAM and UART I/O components |
+| `Livt.Base` | `0.2.0` | Foundational helpers and common library components |
+| `Livt.Math` | `0.3.1` | Numeric, fixed-point, arithmetic, lookup, and random helpers |
+| `Livt.Net` | `0.25.0` | Ethernet, ARP, IPv4, ICMP, TCP, HTTP, and EthernetLite helpers |
+| `Livt.Crypto` | `1.0.3` | Cryptographic primitives, hashes, MACs, KDFs, AEADs, and DRBGs |
+| `Livt.ML` | `0.2.0` | Fixed-size ML building blocks and approximation/reference components |
+| `Livt.IO` | `0.2.0` | RAM, UART, and I²C components |
+| `Livt.Bus` | `0.3.0` | Reusable AXI4-Lite, Avalon, Wishbone, and bridge components |
 | `Livt.Utils` | `0.1.0` | General-purpose utility components such as CRC32 |
 
 The authoritative dependency pins live in [`livt.toml`](livt.toml). Keep the
@@ -59,19 +61,31 @@ Good fits for depending on focused packages directly:
 
 ## 🧪 Build and Test
 
-`Livt` has no source components and no configured test components. Running
-`livt test` in this repository syncs the pinned dependencies, then reports that
-no local test VHDL was generated. Validate releases by checking that `livt.toml`
-pins existing published package versions and by running the individual package
-test suites before publishing the bundle.
+Run the complete standard-library verification from this repository:
+
+```sh
+make test
+```
+
+The command synchronizes the pinned package set, runs every package's own test
+suite in an isolated writable workspace, and then runs this project's combined
+compatibility test. JUnit reports are written below
+`.livt/reports/standard-library`.
+
+To run only the combined compatibility test:
+
+```sh
+make test-integration
+```
 
 Supporting notes live in [`docs/package-set.md`](docs/package-set.md) and
 [`docs/usage.md`](docs/usage.md).
 
 ## 🛠️ Development Notes
 
-- Keep `Livt` as a manifest-only package.
-- Do not add source components to this repository.
+- Keep `Livt` free of production source components.
+- Keep package-specific tests in their owning repositories; this project only
+  owns cross-package compatibility coverage and orchestration.
 - Add new standard-library packages here only after they are publish-ready on
   their own.
 - Update `livt.toml`, the README package table, and `docs/package-set.md`
