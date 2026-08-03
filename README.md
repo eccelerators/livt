@@ -68,8 +68,9 @@ make test
 ```
 
 The command synchronizes the pinned package set, runs every package's own test
-suite in an isolated writable workspace, and then runs this project's combined
-compatibility test. JUnit reports are written below
+suite in an isolated writable workspace using the dependency versions pinned by
+this meta-package, and then runs this project's combined compatibility test.
+JUnit reports are written below
 `.livt/reports/standard-library`.
 
 To run only the combined compatibility test:

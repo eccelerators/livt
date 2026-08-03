@@ -9,10 +9,7 @@ using Livt.ML.Activation
 using Livt.Net
 using Livt.Utils.Hashing
 
-/**
- * Compiles representative public APIs from every pinned standard-library
- * package in the same semantic and generation context.
- */
+@Test
 component PackageSetCompatibility
 {
 	bits: Bits
@@ -28,7 +25,8 @@ component PackageSetCompatibility
 		this.relu = new ReLU()
 	}
 
-	public fn Check() bool
+	@Test
+	fn ResolvesAndRunsPinnedPackageSet()
 	{
 		var valid = this.bits.GetBit(2, 1) == 1
 		valid = valid && Q7.ClampValue(200) == Q7.MAX
@@ -41,6 +39,6 @@ component PackageSetCompatibility
 		this.checksum.Reset()
 		this.checksum.AddByte(0x45)
 		this.checksum.AddByte(0x00)
-		return valid && this.checksum.GetChecksum() == 47871
+		assert(valid && this.checksum.GetChecksum() == 47871)
 	}
 }

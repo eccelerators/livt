@@ -21,7 +21,8 @@ library dependency set.
 Before publishing a new `Livt` meta-package release:
 
 - confirm every pinned package version exists and is publish-ready
-- run `make test` to execute every package suite and the combined compatibility test
+- run `make test` to execute every package suite against this coordinated set
+  and run the combined compatibility test
 - update `livt.toml`
 - update this file
 - update the README package table

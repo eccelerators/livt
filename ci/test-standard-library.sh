@@ -9,6 +9,7 @@ report_dir="${project_dir}/.livt/reports/standard-library"
 temporary_dir=$(mktemp -d "${TMPDIR:-/tmp}/livt-standard-library.XXXXXX")
 failures=()
 tested_packages=0
+declare -A pinned_dependencies=()
 
 cleanup() {
 	chmod -R u+w "${temporary_dir}" 2>/dev/null || true
@@ -19,6 +20,41 @@ trap cleanup EXIT
 record_failure() {
 	failures+=("$1")
 }
+
+load_pinned_dependencies() {
+	local line
+	local dependency
+	local version
+
+	while IFS= read -r line; do
+		dependency=${line%%=*}
+		version=${line#*=}
+		dependency=${dependency//[[:space:]]/}
+		version=${version//[[:space:]\"]/}
+		pinned_dependencies["${dependency}"]=${version}
+	done < <(awk '
+		$0 == "[dependencies]" { in_dependencies = 1; next }
+		in_dependencies && /^\[/ { exit }
+		in_dependencies && /^[[:space:]]*[[:alnum:]_.-]+[[:space:]]*=/ { print }
+	' "${project_dir}/livt.toml")
+}
+
+apply_pinned_dependencies() {
+	local manifest=$1
+	local dependency
+	local escaped_dependency
+	local pinned_version
+
+	for dependency in "${!pinned_dependencies[@]}"; do
+		escaped_dependency=${dependency//./\\.}
+		pinned_version=${pinned_dependencies[${dependency}]}
+		sed -i -E \
+			"s|^([[:space:]]*${escaped_dependency}[[:space:]]*=[[:space:]]*)\"[^\"]*\"|\\1\"${pinned_version}\"|" \
+			"${manifest}"
+	done
+}
+
+load_pinned_dependencies
 
 echo "Synchronizing the Livt standard-library package set..."
 if ! "${livt_command}" sync --project "${project_dir}"; then
@@ -43,16 +79,23 @@ while IFS= read -r -d '' package_dir; do
 		record_failure "${package_id}: package manifest is missing"
 		continue
 	fi
+	apply_pinned_dependencies "${writable_package}/livt.toml"
 	if ! grep -q '^\[tests\]$' "${writable_package}/livt.toml"; then
 		record_failure "${package_id}: no test suite is configured"
 		continue
 	fi
-	if ! "${livt_command}" sync --project "${writable_package}"; then
+	if ! (
+		cd -- "${writable_package}"
+		"${livt_command}" sync --project .
+	); then
 		record_failure "${package_id}: dependency synchronization failed"
 		continue
 	fi
-	if ! "${livt_command}" test --project "${writable_package}" \
-		--junit "${report_dir}/${report_name}.xml"; then
+	if ! (
+		cd -- "${writable_package}"
+		"${livt_command}" test --project . \
+			--junit "${report_dir}/${report_name}.xml"
+	); then
 		record_failure "${package_id}: tests failed"
 	fi
 done < <(find "${project_dir}/.livt/deps" -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
@@ -63,8 +106,10 @@ fi
 
 echo
 echo "Testing the combined Livt package set..."
-if ! "${livt_command}" test --project "${project_dir}" \
-	--junit "${report_dir}/Livt.xml"; then
+if ! (
+	cd -- "${project_dir}"
+	"${livt_command}" test --project . --junit "${report_dir}/Livt.xml"
+); then
 	record_failure "Livt: combined compatibility tests failed"
 fi
 
