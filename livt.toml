@@ -1,17 +1,17 @@
 [project]
 name = "Livt"
-version = "1.0.0"
+version = "1.0.1"
 
 [dependencies]
-Livt.Base = "1.0.0"
-Livt.Bus = "1.0.0"
-Livt.Collections = "1.0.0"
+Livt.Base = "1.0.1"
+Livt.Bus = "1.0.1"
+Livt.Collections = "1.0.1"
 Livt.Crypto = "1.0.3"
-Livt.IO = "1.0.0"
+Livt.IO = "1.0.1"
 Livt.Math = "1.0.0"
-Livt.ML = "1.0.0"
-Livt.Net = "1.0.0"
-Livt.Utils = "1.0.0"
+Livt.ML = "1.0.1"
+Livt.Net = "1.0.1"
+Livt.Utils = "1.0.1"
 
 [tests]
 path = "tests"

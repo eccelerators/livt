@@ -4,18 +4,16 @@
 applications and larger packages one dependency that brings in the official Livt
 library packages as a tested, compatible set.
 
-The 0.3.0 package is a manifest bundle. It does not publish production source
+The 1.0.1 package is a manifest bundle. It does not publish production source
 components of its own; it pins versions of the focused library packages that
 make up the current Livt standard library and provides an integration test for
 the complete package set.
-
-![Livt standard library architecture](docs/architecture.svg)
 
 ## 📦 Package
 
 ```toml
 [dependencies]
-Livt = "0.3.0"
+Livt = "1.0.1"
 ```
 
 Use `Livt` when an application wants the full standard library surface. Smaller
@@ -24,18 +22,19 @@ such as `Livt.Math`, `Livt.IO`, or `Livt.Crypto`.
 
 ## 📚 Package Set
 
-`Livt 0.3.0` pins this compatible package set:
+`Livt 1.0.1` pins this compatible package set:
 
 | Package | Version | Role |
 |---|---:|---|
-| `Livt.Base` | `0.2.0` | Foundational helpers and common library components |
-| `Livt.Math` | `0.3.1` | Numeric, fixed-point, arithmetic, lookup, and random helpers |
-| `Livt.Net` | `0.25.0` | Ethernet, ARP, IPv4, ICMP, TCP, HTTP, and EthernetLite helpers |
+| `Livt.Base` | `1.0.1` | Foundational helpers and common library components |
+| `Livt.Bus` | `1.0.1` | Reusable AXI4-Lite, Avalon, Wishbone, and bridge components |
+| `Livt.Collections` | `1.0.1` | Fixed-capacity queues, stacks, lists, circular buffers, and bit sets |
 | `Livt.Crypto` | `1.0.3` | Cryptographic primitives, hashes, MACs, KDFs, AEADs, and DRBGs |
-| `Livt.ML` | `0.2.0` | Fixed-size ML building blocks and approximation/reference components |
-| `Livt.IO` | `0.2.0` | RAM, UART, and I²C components |
-| `Livt.Bus` | `0.3.0` | Reusable AXI4-Lite, Avalon, Wishbone, and bridge components |
-| `Livt.Utils` | `0.1.0` | General-purpose utility components such as CRC32 |
+| `Livt.IO` | `1.0.1` | RAM, UART, and I²C components |
+| `Livt.Math` | `1.0.0` | Numeric, fixed-point, arithmetic, lookup, and random helpers |
+| `Livt.ML` | `1.0.1` | Fixed-size ML building blocks and approximation/reference components |
+| `Livt.Net` | `1.0.1` | Ethernet, ARP, IPv4, ICMP, TCP, checksums, and EthernetLite helpers |
+| `Livt.Utils` | `1.0.1` | General-purpose utility components such as CRC32 |
 
 The authoritative dependency pins live in [`livt.toml`](livt.toml). Keep the
 table above aligned with that manifest when preparing a new meta-package release.
