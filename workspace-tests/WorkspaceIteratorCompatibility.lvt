@@ -1,0 +1,66 @@
+namespace Livt.StandardLibrary.Tests
+
+using Livt.Iteration
+using Livt.Collections.List
+
+/** Cross-package coverage for current workspace APIs, not the older release pins. */
+@Test
+component WorkspaceIteratorCompatibility
+{
+    // Shared library storage and separately owned cursors.
+    values: List<byte, 8>
+    first: ListIterator<byte>
+    second: ListIterator<byte>
+    array: ArrayIterator<int>
+
+    new() {
+        this.values = new List<byte, 8>()
+        this.first = new ListIterator<byte>(this.values)
+        this.second = new ListIterator<byte>(this.values)
+        this.array = new ArrayIterator<int>([1, 2, 3], 3)
+    }
+
+    @Test
+    fn IndependentCursorsAndReset() {
+        this.values.Clear()
+        this.values.Add(0x01)
+        this.values.Add(0x02)
+        this.values.Add(0x03)
+        this.first.Reset()
+        this.second.Reset()
+        var sum = Iteration.Fold<byte, int>(this.first, 0,
+            fn(accumulator: int, value: byte) int { return accumulator + (value as int) })
+        assert sum == 6
+        assert this.second.Next() == 0x01
+        this.first.Reset()
+        assert this.first.Next() == 0x01
+        assert this.values.GetSize() == 3
+    }
+
+    @Test
+    fn ShortCircuitAndEmptyInput() {
+        this.values.Clear()
+        this.values.Add(0x01)
+        this.values.Add(0x02)
+        this.values.Add(0x03)
+        this.first.Reset()
+        var limit = 0x02
+        assert Iteration.Any<byte>(this.first, fn(value: byte) bool { return value == limit })
+        assert this.first.Next() == 0x03
+        assert !Iteration.Any<byte>(this.first, fn(value: byte) bool { return true })
+        this.values.Clear()
+        this.first.Reset()
+        assert Iteration.Fold<byte, int>(this.first, 17,
+            fn(accumulator: int, value: byte) int { return accumulator + (value as int) }) == 17
+        assert Iteration.All<byte>(this.first, fn(value: byte) bool { return false })
+    }
+
+    @Test
+    fn ArrayIteratorAndNamedCallable() {
+        this.array.Reset()
+        assert Iteration.Fold<int, int>(this.array, initial = 0,
+            operation = fn(accumulator: int, value: int) int { return accumulator + value }) == 6
+        this.array.Reset()
+        assert Iteration.CountWhere<int>(this.array, fn(value: int) bool { return value > 1 }) == 2
+    }
+}

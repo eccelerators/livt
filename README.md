@@ -4,7 +4,7 @@
 applications and larger packages one dependency that brings in the official Livt
 library packages as a tested, compatible set.
 
-The 1.0.1 package is a manifest bundle. It does not publish production source
+The 1.1.0 package is a manifest bundle. It does not publish production source
 components of its own; it pins versions of the focused library packages that
 make up the current Livt standard library and provides an integration test for
 the complete package set.
@@ -13,7 +13,7 @@ the complete package set.
 
 ```toml
 [dependencies]
-Livt = "1.0.1"
+Livt = "1.1.0"
 ```
 
 Use `Livt` when an application wants the full standard library surface. Smaller
@@ -22,19 +22,19 @@ such as `Livt.Math`, `Livt.IO`, or `Livt.Crypto`.
 
 ## 📚 Package Set
 
-`Livt 1.0.1` pins this compatible package set:
+`Livt 1.1.0` pins this compatible package set:
 
 | Package | Version | Role |
 |---|---:|---|
-| `Livt.Base` | `1.0.1` | Foundational helpers and common library components |
-| `Livt.Bus` | `1.0.1` | Reusable AXI4-Lite, Avalon, Wishbone, and bridge components |
-| `Livt.Collections` | `1.0.1` | Fixed-capacity queues, stacks, lists, circular buffers, and bit sets |
-| `Livt.Crypto` | `1.0.3` | Cryptographic primitives, hashes, MACs, KDFs, AEADs, and DRBGs |
-| `Livt.IO` | `1.0.1` | RAM, UART, and I²C components |
-| `Livt.Math` | `1.0.0` | Numeric, fixed-point, arithmetic, lookup, and random helpers |
-| `Livt.ML` | `1.0.1` | Fixed-size ML building blocks and approximation/reference components |
-| `Livt.Net` | `1.0.1` | Ethernet, ARP, IPv4, ICMP, TCP, checksums, and EthernetLite helpers |
-| `Livt.Utils` | `1.0.1` | General-purpose utility components such as CRC32 |
+| `Livt.Base` | `1.2.0` | Foundational helpers and common library components |
+| `Livt.Bus` | `1.0.2` | Reusable AXI4-Lite, Avalon, Wishbone, and bridge components |
+| `Livt.Collections` | `1.1.0` | Fixed-capacity queues, stacks, lists, circular buffers, and bit sets |
+| `Livt.Crypto` | `1.0.4` | Cryptographic primitives, hashes, MACs, KDFs, AEADs, and DRBGs |
+| `Livt.IO` | `1.2.0` | RAM, UART, and I²C components |
+| `Livt.Math` | `1.3.0` | Numeric, fixed-point, arithmetic, lookup, and random helpers |
+| `Livt.ML` | `1.4.1` | Fixed-size ML building blocks and approximation/reference components |
+| `Livt.Net` | `1.1.0` | Ethernet, ARP, IPv4, ICMP, TCP, checksums, and EthernetLite helpers |
+| `Livt.Utils` | `1.0.2` | General-purpose utility components such as CRC32 |
 
 The authoritative dependency pins live in [`livt.toml`](livt.toml). Keep the
 table above aligned with that manifest when preparing a new meta-package release.
@@ -77,6 +77,50 @@ To run only the combined compatibility test:
 ```sh
 make test-integration
 ```
+
+For unpublished sibling checkouts, use a separate workspace snapshot:
+
+```sh
+make test-workspace-integration  # combined compatibility, including current iterators
+make test-workspace-iterators    # focused Base/Collections iterator integration
+make test-workspace-memory       # focused generic RAM integration
+make test-workspace              # all current package suites plus compatibility
+make test-tools                  # runner unit tests
+```
+
+Workspace mode requires all packages in the manifest as sibling repositories.
+Override their parent with `WORKSPACE_ARGS="--workspace-root /path/to/libraries"`.
+It copies source/test trees to a temporary workspace and rewrites every library
+dependency there to the corresponding staged package. It never edits release pins
+or source checkouts, and refuses unmapped dependencies instead of mixing releases
+with workspace versions. Reports and source revision/version metadata are under
+`.livt/reports/workspace`, separate from released-package reports.
+The focused iterator target compiles only Base/Collections and writes reports to
+`.livt/reports/workspace-iterators`; it uses the same coherent source snapshot.
+
+The focused memory target stages only Collections/IO and verifies
+`workspace-tests/WorkspaceMemoryCompatibility.lvt`. Add CLI consumers with:
+
+```sh
+make test-workspace-memory WORKSPACE_ARGS="--cli-root ../eccelerators-cli --app-root ../../livt-demo/livt-uart-cli-app"
+```
+
+Use `--release` and/or `--no-optimizations` in `WORKSPACE_ARGS` to change the
+generation profile. Memory evidence and snapshots remain in the printed
+`/tmp/livt-memory-workspace-*` directory. Dependency pins are never edited.
+The generic RAM integration and all 36 CLI package tests pass. Compiler #476
+fixes the UART application's scheduled return lowering; its full interactive
+session now passes with default optimizations and `-O none`, as does the CLI
+suite. These consumer checks use published Livt.IO
+`1.2.0-dev`/Collections `1.1.0-dev` with staged current CLI/application sources;
+they do not claim compatibility with the older published CLI `1.1.0` sources.
+Vendor-project and board verification remain separate. Revisions and logs are
+recorded with #476 in the development release's compiler tracker.
+
+The pinned combined compatibility test exercises the generic RAM API with
+read/write transactions and a capacity-boundary check alongside the other
+package checks. Workspace mode adds broader memory and Base/Collections iterator
+coverage from `workspace-tests/` using staged sibling sources.
 
 Supporting notes live in [`docs/package-set.md`](docs/package-set.md) and
 [`docs/usage.md`](docs/usage.md).

@@ -1,0 +1,45 @@
+namespace Livt.StandardLibrary.Tests
+
+using Livt.IO
+
+/**
+ * Verifies generic memory APIs against the current workspace package sources.
+ */
+@Test
+component WorkspaceMemoryCompatibility
+{
+	// Independent capacities, payload widths and compile-time storage intentions.
+	bytes: Ram<byte, 3>
+	block: BlockRam<logic[16], 1>
+	distributed: DistributedRam<uint, 7>
+
+	/**
+	 * Constructs reset-free memories; every valid cell is written before reading.
+	 */
+	new()
+	{
+		this.bytes = new Ram<byte, 3>()
+		this.block = new BlockRam<logic[16], 1>()
+		this.distributed = new DistributedRam<uint, 7>()
+	}
+
+	/**
+	 * Exercises boundaries and high bits through the public scheduled contracts.
+	 */
+	@Test
+	fn GenericMemoryContracts()
+	{
+		bytes.Write(0, 0x12)
+		bytes.Write(2, 0xAB)
+		block.Write(0, 0x8001)
+		distributed.Write(6, 0x80000001)
+		assert bytes.Read(0) == 0x12
+		assert bytes.Read(2) == 0xAB
+		assert block.Read(0) == 0x8001
+		assert distributed.Read(6) == 0x80000001
+		bytes.Write(3, 0xFF)
+		assert bytes.Read(3) == 0
+		assert bytes.Read(0) == 0x12
+		assert !block.IsValidAddress(1)
+	}
+}

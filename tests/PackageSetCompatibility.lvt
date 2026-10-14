@@ -18,11 +18,14 @@ component PackageSetCompatibility
 
 	relu: ReLU
 
+	memory: Ram<byte, 3>
+
 	new()
 	{
 		this.bits = new Bits()
 		this.checksum = new InternetChecksum()
 		this.relu = new ReLU()
+		this.memory = new Ram<byte, 3>()
 	}
 
 	@Test
@@ -32,9 +35,14 @@ component PackageSetCompatibility
 		valid = valid && Q7.ClampValue(200) == Q7.MAX
 		valid = valid && Sha256.BLOCK_SIZE == 64
 		valid = valid && this.relu.Apply(-3) == 0
-		valid = valid && Ram.CAPACITY == 2048
 		valid = valid && Axi4LiteMaster.ALL_BYTES == 0b1111
 		valid = valid && Crc32.BLOCK_SIZE == 16
+
+		this.memory.Write(0, 0x12)
+		this.memory.Write(2, 0xAB)
+		assert this.memory.Read(0) == 0x12
+		assert this.memory.Read(2) == 0xAB
+		assert !this.memory.IsValidAddress(3)
 
 		this.checksum.Reset()
 		this.checksum.AddByte(0x45)

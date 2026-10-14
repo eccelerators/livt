@@ -1,35 +1,41 @@
-# Livt 0.3.0 Package Set
+# Livt 1.1.0 Package Set
 
-`Livt` is a manifest package. Its purpose is to publish one coordinated standard
-library dependency set.
-
-## Pinned Versions
+The authoritative release pins are in [livt.toml](../livt.toml):
 
 | Package | Version |
-|---|---:|
-| `Livt.Base` | `0.2.0` |
-| `Livt.Math` | `0.3.1` |
-| `Livt.Net` | `0.25.0` |
-| `Livt.Crypto` | `1.0.3` |
-| `Livt.ML` | `0.2.0` |
-| `Livt.IO` | `0.2.0` |
-| `Livt.Bus` | `0.3.0` |
-| `Livt.Utils` | `0.1.0` |
+|---|---|
+| Livt.Base | 1.2.0 |
+| Livt.Bus | 1.0.2 |
+| Livt.Collections | 1.1.0 |
+| Livt.Crypto | 1.0.4 |
+| Livt.IO | 1.2.0 |
+| Livt.Math | 1.3.0 |
+| Livt.ML | 1.4.1 |
+| Livt.Net | 1.1.0 |
+| Livt.Utils | 1.0.2 |
 
-## Release Checklist
+## Verification modes
 
-Before publishing a new `Livt` meta-package release:
+- `make test`: pinned package suites and the released combined compatibility test.
+- `make test-integration`: only that combined compatibility test.
+- `make test-workspace`: all sibling package suites in an isolated source snapshot,
+  followed by combined compatibility and the current iterator API checks.
+- `make test-workspace-integration`: only the combined workspace checks.
+- `make test-workspace-iterators`: focused Base/Collections compatibility with
+  separate reports, useful when investigating iterator failures.
 
-- confirm every pinned package version exists and is publish-ready
-- run `make test` to execute every package suite against this coordinated set
-  and run the combined compatibility test
-- update `livt.toml`
-- update this file
-- update the README package table
-- keep this repository free of production source components
+Workspace mode does not change the release pins and does not establish that a
+published bundle is compatible. It records source versions, Git revisions and dirty
+status in its report directory. A dirty workspace remains a development snapshot,
+not an immutable released dependency set.
 
-## Compatibility Boundary
+## Ownership and release checklist
 
-The meta-package promises a convenient compatible bundle. It does not imply that
-every package depends on every other package. Package-level dependency direction
-remains owned by each focused library.
+Package-specific tests stay with their packages; this repository orchestrates them
+and owns cross-package compatibility tests. Compiler-language regressions belong
+in livt-gen-vhdl-verification with minimal fixture-owned models.
+
+Before publishing: select available package versions deliberately, run the pinned
+suite, promote applicable workspace-only compatibility tests, and update the
+manifest, README table and this document together. No production components belong
+in this meta-package.

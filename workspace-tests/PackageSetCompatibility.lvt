@@ -1,0 +1,51 @@
+namespace Livt.StandardLibrary.Tests
+
+using Livt.Bits
+using Livt.Bus.Axi4Lite
+using Livt.Crypto.Hash
+using Livt.Math.FixedPoint
+using Livt.ML.Activation
+using Livt.Net
+using Livt.Utils.Hashing
+
+/**
+ * Checks the current workspace package set. Generic RAM has its own broader
+ * workspace fixture, in addition to the pinned-package RAM smoke test.
+ */
+@Test
+component PackageSetCompatibility
+{
+	// Independent cross-package examples, owned by this fixture.
+	bits: Bits
+	checksum: InternetChecksum
+	relu: ReLU
+
+	/**
+	 * Constructs the participating components.
+	 */
+	new()
+	{
+		this.bits = new Bits()
+		this.checksum = new InternetChecksum()
+		this.relu = new ReLU()
+	}
+
+	/**
+	 * Checks constants, computation and a small stateful checksum transaction.
+	 */
+	@Test
+	fn ResolvesAndRunsWorkspacePackageSet()
+	{
+		var valid = this.bits.GetBit(2, 1) == 1
+		valid = valid && Q7.ClampValue(200) == Q7.MAX
+		valid = valid && Sha256.BLOCK_SIZE == 64
+		valid = valid && this.relu.Apply(-3) == 0
+		valid = valid && Axi4LiteMaster.ALL_BYTES == 0b1111
+		valid = valid && Crc32.BLOCK_SIZE == 16
+
+		this.checksum.Reset()
+		this.checksum.AddByte(0x45)
+		this.checksum.AddByte(0x00)
+		assert valid && this.checksum.GetChecksum() == 47871
+	}
+}
