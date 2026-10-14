@@ -30,7 +30,7 @@ such as `Livt.Math`, `Livt.IO`, or `Livt.Crypto`.
 | `Livt.Bus` | `1.0.2` | Reusable AXI4-Lite, Avalon, Wishbone, and bridge components |
 | `Livt.Collections` | `1.1.0` | Fixed-capacity queues, stacks, lists, circular buffers, and bit sets |
 | `Livt.Crypto` | `1.0.4` | Cryptographic primitives, hashes, MACs, KDFs, AEADs, and DRBGs |
-| `Livt.IO` | `1.2.0` | RAM, UART, and I²C components |
+| `Livt.IO` | `1.2.0` | RAM, UART, I²C, SPI, and 10/100 Mbit/s Ethernet components |
 | `Livt.Math` | `1.3.0` | Numeric, fixed-point, arithmetic, lookup, and random helpers |
 | `Livt.ML` | `1.4.1` | Fixed-size ML building blocks and approximation/reference components |
 | `Livt.Net` | `1.1.0` | Ethernet, ARP, IPv4, ICMP, TCP, checksums, and EthernetLite helpers |
@@ -108,14 +108,10 @@ make test-workspace-memory WORKSPACE_ARGS="--cli-root ../eccelerators-cli --app-
 Use `--release` and/or `--no-optimizations` in `WORKSPACE_ARGS` to change the
 generation profile. Memory evidence and snapshots remain in the printed
 `/tmp/livt-memory-workspace-*` directory. Dependency pins are never edited.
-The generic RAM integration and all 36 CLI package tests pass. Compiler #476
-fixes the UART application's scheduled return lowering; its full interactive
-session now passes with default optimizations and `-O none`, as does the CLI
-suite. These consumer checks use published Livt.IO
-`1.2.0-dev`/Collections `1.1.0-dev` with staged current CLI/application sources;
-they do not claim compatibility with the older published CLI `1.1.0` sources.
-Vendor-project and board verification remain separate. Revisions and logs are
-recorded with #476 in the development release's compiler tracker.
+Optional CLI and application checks use the sources supplied to the workspace
+runner. Their results apply to that snapshot and do not establish compatibility
+with other published consumer versions. Vendor-project and board verification
+remain separate.
 
 The pinned combined compatibility test exercises the generic RAM API with
 read/write transactions and a capacity-boundary check alongside the other
