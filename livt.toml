@@ -10,7 +10,7 @@ Livt.Crypto = "1.0.4"
 Livt.IO = "1.2.0"
 Livt.Math = "1.3.0"
 Livt.ML = "1.4.1"
-Livt.Net = "1.1.0"
+Livt.Net = "1.2.0"
 Livt.Utils = "1.0.2"
 
 [tests]
