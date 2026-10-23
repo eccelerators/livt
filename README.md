@@ -123,13 +123,10 @@ Supporting notes live in [`docs/package-set.md`](docs/package-set.md) and
 
 ## 🛠️ Development Notes
 
-- Keep `Livt` free of production source components.
 - Keep package-specific tests in their owning repositories; this project only
   owns cross-package compatibility coverage and orchestration.
 - Add new standard-library packages here only after they are publish-ready on
   their own.
-- Update `livt.toml`, the README package table, and `docs/package-set.md`
-  together.
 - Use focused package dependencies for reusable libraries unless the full bundle
   is genuinely intended.
 
